@@ -1,0 +1,299 @@
+/**
+ * Frontend styles for Avada Product Filter
+ * Compatible with Avada theme styling
+ */
+
+.avada-product-filter-wrapper {
+    margin-bottom: 30px;
+}
+
+.avada-product-filter-controls {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    border: 1px solid #e5e5e5;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group:last-child {
+    margin-bottom: 0;
+}
+
+.filter-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+/* Category Filter */
+.filter-categories select {
+    width: 100%;
+    max-width: 250px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.filter-categories select:focus {
+    outline: none;
+    border-color: #65BCE7;
+    box-shadow: 0 0 5px rgba(101, 188, 231, 0.3);
+}
+
+/* Attribute Filters */
+.attribute-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.attribute-option {
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    font-weight: normal !important;
+    cursor: pointer;
+    padding: 6px 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    font-size: 13px;
+}
+
+.attribute-option:hover {
+    background: #f0f0f0;
+    border-color: #65BCE7;
+}
+
+.attribute-option input[type="checkbox"] {
+    margin: 0 6px 0 0;
+    width: 16px;
+    height: 16px;
+}
+
+.attribute-option input[type="checkbox"]:checked + span {
+    font-weight: 600;
+    color: #65BCE7;
+}
+
+/* Price Filter */
+.price-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.price-range-inputs input[type="number"] {
+    width: 100px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 14px;
+}
+
+.price-range-inputs input[type="number"]:focus {
+    outline: none;
+    border-color: #65BCE7;
+    box-shadow: 0 0 5px rgba(101, 188, 231, 0.3);
+}
+
+.price-separator {
+    font-weight: 600;
+    color: #666;
+}
+
+.price-range-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+}
+
+/* Filter Actions */
+.filter-actions {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.avada-filter-clear {
+    background: #65BCE7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.3s ease;
+}
+
+.avada-filter-clear:hover {
+    background: #4a9cc7;
+}
+
+/* Products Container */
+.avada-product-filter-products {
+    position: relative;
+}
+
+.avada-product-filter-products.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.avada-product-filter-products.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #65BCE7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* No Products Found */
+.no-products-found {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8f8f8;
+    border-radius: 6px;
+    border: 1px solid #e5e5e5;
+}
+
+.no-products-found p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Pagination */
+.avada-filter-pagination {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.avada-filter-pagination .woocommerce-pagination {
+    display: inline-block;
+}
+
+.avada-filter-pagination .page-numbers {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+    justify-content: center;
+}
+
+.avada-filter-pagination .page-numbers li {
+    margin: 0;
+}
+
+.avada-filter-pagination .page-numbers a,
+.avada-filter-pagination .page-numbers span {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.avada-filter-pagination .page-numbers a:hover,
+.avada-filter-pagination .page-numbers .current {
+    background: #65BCE7;
+    color: #fff;
+    border-color: #65BCE7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .avada-product-filter-controls {
+        padding: 15px;
+    }
+    
+    .attribute-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .attribute-option {
+        padding: 10px 15px;
+    }
+    
+    .price-range-inputs {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .price-range-inputs input[type="number"] {
+        width: 100%;
+    }
+    
+    .price-separator {
+        text-align: center;
+    }
+    
+    .avada-filter-pagination .page-numbers {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .avada-product-filter-controls {
+        padding: 10px;
+    }
+    
+    .filter-group {
+        margin-bottom: 15px;
+    }
+}
+
+/* Avada Theme Compatibility */
+.fusion-body .avada-product-filter-wrapper .filter-group label {
+    font-family: inherit;
+}
+
+.fusion-body .avada-product-filter-wrapper .avada-filter-clear {
+    font-family: inherit;
+}
+
+.fusion-body .avada-product-filter-wrapper select,
+.fusion-body .avada-product-filter-wrapper input[type="number"] {
+    font-family: inherit;
+}
+
+/* Ensure compatibility with Avada button styles */
+.fusion-button.avada-filter-clear {
+    background: var(--awb-color1, #65BCE7) !important;
+    border-color: var(--awb-color1, #65BCE7) !important;
+}
+
+.fusion-button.avada-filter-clear:hover {
+    background: var(--awb-color1-h, #4a9cc7) !important;
+    border-color: var(--awb-color1-h, #4a9cc7) !important;
+}

@@ -1,0 +1,45 @@
+/**
+ * Admin styles for Avada Product Filter
+ */
+
+.avada-product-filter-admin {
+    max-width: 1200px;
+}
+
+.avada-product-filter-admin .main-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.avada-product-filter-admin .sidebar .postbox {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.usage-section h3 {
+    color: #23282d;
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 5px;
+}
+
+.usage-section h4 {
+    color: #555;
+    margin-top: 20px;
+}
+
+.usage-section code {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 13px;
+}
+
+.usage-section ul li {
+    margin-bottom: 5px;
+}
+
+.usage-section ul li strong {
+    color: #0073aa;
+}
