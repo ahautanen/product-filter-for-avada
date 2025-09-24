@@ -1,0 +1,331 @@
+# Copyright (C) 2024 Product Filter for Avada
+# This file is distributed under the same license as the Product Filter for Avada package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Product Filter for Avada 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/ahautanen/product-filter-for-avada\n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: WP-CLI 2.8.1\n"
+"X-Domain: product-filter-for-avada\n"
+
+#: product-filter-for-avada.php:85
+msgid "Product Filter for Avada requires WooCommerce to be installed and active."
+msgstr ""
+
+#: includes/class-shortcode.php:83
+msgid "Clear Filters"
+msgstr ""
+
+#: includes/class-shortcode.php:123
+msgid "Category"
+msgstr ""
+
+#: includes/class-shortcode.php:126
+msgid "All Categories"
+msgstr ""
+
+#: includes/class-shortcode.php:179
+msgid "Price Range"
+msgstr ""
+
+#: includes/class-shortcode.php:182
+msgid "Min"
+msgstr ""
+
+#: includes/class-shortcode.php:184
+msgid "Max"
+msgstr ""
+
+#: includes/class-shortcode.php:284
+msgid "No products found matching your criteria."
+msgstr ""
+
+#: includes/class-shortcode.php:298
+msgid "&laquo; Previous"
+msgstr ""
+
+#: includes/class-shortcode.php:299
+msgid "Next &raquo;"
+msgstr ""
+
+#: includes/class-fusion-element.php:36
+msgid "Product Filter"
+msgstr ""
+
+#: includes/class-fusion-element.php:45
+msgid "Show Categories Filter"
+msgstr ""
+
+#: includes/class-fusion-element.php:46
+msgid "Choose whether to display the category filter."
+msgstr ""
+
+#: includes/class-fusion-element.php:49
+#: includes/class-fusion-element.php:68
+msgid "Yes"
+msgstr ""
+
+#: includes/class-fusion-element.php:50
+#: includes/class-fusion-element.php:69
+msgid "No"
+msgstr ""
+
+#: includes/class-fusion-element.php:55
+msgid "Specific Categories"
+msgstr ""
+
+#: includes/class-fusion-element.php:56
+msgid "Enter specific category IDs separated by commas. Leave empty to show all categories."
+msgstr ""
+
+#: includes/class-fusion-element.php:66
+msgid "Show Attributes Filter"
+msgstr ""
+
+#: includes/class-fusion-element.php:67
+msgid "Choose whether to display attribute filters."
+msgstr ""
+
+#: includes/class-fusion-element.php:75
+msgid "Specific Attributes"
+msgstr ""
+
+#: includes/class-fusion-element.php:76
+msgid "Enter specific attribute names separated by commas. Leave empty to show all attributes."
+msgstr ""
+
+#: includes/class-fusion-element.php:87
+msgid "Show Price Filter"
+msgstr ""
+
+#: includes/class-fusion-element.php:88
+msgid "Choose whether to display the price range filter."
+msgstr ""
+
+#: includes/class-fusion-element.php:96
+msgid "Columns"
+msgstr ""
+
+#: includes/class-fusion-element.php:97
+msgid "Number of columns for product display."
+msgstr ""
+
+#: includes/class-fusion-element.php:105
+msgid "Products Per Page"
+msgstr ""
+
+#: includes/class-fusion-element.php:106
+msgid "Number of products to show per page."
+msgstr ""
+
+#: includes/class-fusion-element.php:114
+msgid "Order By"
+msgstr ""
+
+#: includes/class-fusion-element.php:115
+msgid "Choose how to order the products."
+msgstr ""
+
+#: includes/class-fusion-element.php:118
+msgid "Menu Order"
+msgstr ""
+
+#: includes/class-fusion-element.php:119
+msgid "Title"
+msgstr ""
+
+#: includes/class-fusion-element.php:120
+msgid "Date"
+msgstr ""
+
+#: includes/class-fusion-element.php:121
+msgid "Price"
+msgstr ""
+
+#: includes/class-fusion-element.php:122
+msgid "Popularity"
+msgstr ""
+
+#: includes/class-fusion-element.php:123
+msgid "Rating"
+msgstr ""
+
+#: includes/class-fusion-element.php:128
+msgid "Order Direction"
+msgstr ""
+
+#: includes/class-fusion-element.php:129
+msgid "Choose the sort direction."
+msgstr ""
+
+#: includes/class-fusion-element.php:132
+msgid "Ascending"
+msgstr ""
+
+#: includes/class-fusion-element.php:133
+msgid "Descending"
+msgstr ""
+
+#: includes/class-fusion-element.php:138
+msgid "CSS Class"
+msgstr ""
+
+#: includes/class-fusion-element.php:139
+msgid "Add a custom CSS class for styling."
+msgstr ""
+
+#: includes/class-fusion-element.php:144
+msgid "CSS ID"
+msgstr ""
+
+#: includes/class-fusion-element.php:145
+msgid "Add a custom CSS ID for styling."
+msgstr ""
+
+#: includes/class-ajax-handler.php:25
+#: includes/class-ajax-handler.php:185
+msgid "Security check failed"
+msgstr ""
+
+#: includes/class-admin.php:27
+msgid "Product Filter for Avada"
+msgstr ""
+
+#: includes/class-admin.php:43
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-admin.php:49
+msgid "Enable Category Filter"
+msgstr ""
+
+#: includes/class-admin.php:55
+msgid "Enable category filtering functionality."
+msgstr ""
+
+#: includes/class-admin.php:60
+msgid "Enable Attribute Filters"
+msgstr ""
+
+#: includes/class-admin.php:66
+msgid "Enable product attribute filtering functionality."
+msgstr ""
+
+#: includes/class-admin.php:71
+msgid "Enable AJAX Filtering"
+msgstr ""
+
+#: includes/class-admin.php:77
+msgid "Enable AJAX filtering for seamless user experience without page reloads."
+msgstr ""
+
+#: includes/class-admin.php:82
+msgid "Show Product Count"
+msgstr ""
+
+#: includes/class-admin.php:88
+msgid "Show product count next to filter options."
+msgstr ""
+
+#: includes/class-admin.php:96
+msgid "Configure the product filter settings below."
+msgstr ""
+
+#: includes/class-admin.php:122
+msgid "Usage Instructions"
+msgstr ""
+
+#: includes/class-admin.php:124
+msgid "Shortcode Usage"
+msgstr ""
+
+#: includes/class-admin.php:125
+msgid "Use the following shortcode to display the product filter:"
+msgstr ""
+
+#: includes/class-admin.php:128
+msgid "Shortcode Parameters"
+msgstr ""
+
+#: includes/class-admin.php:130
+msgid "Comma-separated category IDs to filter by specific categories"
+msgstr ""
+
+#: includes/class-admin.php:131
+msgid "Comma-separated attribute names to show specific attribute filters"
+msgstr ""
+
+#: includes/class-admin.php:132
+msgid "Show category filter (yes/no)"
+msgstr ""
+
+#: includes/class-admin.php:133
+msgid "Show attribute filters (yes/no)"
+msgstr ""
+
+#: includes/class-admin.php:134
+msgid "Show price range filter (yes/no)"
+msgstr ""
+
+#: includes/class-admin.php:135
+msgid "Number of product columns (1-6)"
+msgstr ""
+
+#: includes/class-admin.php:136
+msgid "Number of products per page"
+msgstr ""
+
+#: includes/class-admin.php:137
+msgid "Product ordering (menu_order, title, date, price, popularity, rating)"
+msgstr ""
+
+#: includes/class-admin.php:138
+msgid "Sort direction (ASC/DESC)"
+msgstr ""
+
+#: includes/class-admin.php:141
+msgid "Example Usage"
+msgstr ""
+
+#: includes/class-admin.php:144
+msgid "Fusion Builder Integration"
+msgstr ""
+
+#: includes/class-admin.php:145
+msgid "When using Avada theme with Fusion Builder, you can find the \"Product Filter\" element in the Fusion Builder elements list. Simply drag and drop it into your page and configure the settings in the element options."
+msgstr ""
+
+#: includes/class-admin.php:150
+msgid "Plugin Information"
+msgstr ""
+
+#: includes/class-admin.php:152
+msgid "Version:"
+msgstr ""
+
+#: includes/class-admin.php:153
+msgid "Requirements:"
+msgstr ""
+
+#: includes/class-admin.php:163
+msgid "Support"
+msgstr ""
+
+#: includes/class-admin.php:165
+msgid "For support and documentation, please visit:"
+msgstr ""
+
+#: includes/class-admin.php:166
+msgid "GitHub Repository"
+msgstr ""
+
+#: includes/class-admin.php:224
+msgid "Settings"
+msgstr ""
