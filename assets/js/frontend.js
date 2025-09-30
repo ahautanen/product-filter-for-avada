@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.target.matches('.avada-product-filter-controls input[type="checkbox"]')) {
                     AvadaProductFilter.handleFilterChange(e);
                 }
+                
+                // Handle dimension toggle checkboxes
+                if (e.target.matches('.dimension-toggle')) {
+                    AvadaProductFilter.handleDimensionToggle(e);
+                }
             });
             
             // Debounced input for number fields
@@ -91,16 +96,22 @@ document.addEventListener('DOMContentLoaded', function() {
             data.append('category', categorySelect ? categorySelect.value : '');
             data.append('min_price', minPriceInput ? minPriceInput.value : '');
             data.append('max_price', maxPriceInput ? maxPriceInput.value : '');
-            data.append('min_width', minWidthInput ? minWidthInput.value : '');
-            data.append('max_width', maxWidthInput ? maxWidthInput.value : '');
-            data.append('min_depth', minDepthInput ? minDepthInput.value : '');
-            data.append('max_depth', maxDepthInput ? maxDepthInput.value : '');
-            data.append('min_area', minAreaInput ? minAreaInput.value : '');
-            data.append('max_area', maxAreaInput ? maxAreaInput.value : '');
+            // Only send dimension values if their checkboxes are enabled
+            const enableWidthFilter = wrapper.querySelector('input[name="enable_width_filter"]:checked');
+            const enableDepthFilter = wrapper.querySelector('input[name="enable_depth_filter"]:checked');
+            const enableAreaFilter = wrapper.querySelector('input[name="enable_area_filter"]:checked');
+            
+            data.append('min_width', (enableWidthFilter && minWidthInput) ? minWidthInput.value : '');
+            data.append('max_width', (enableWidthFilter && maxWidthInput) ? maxWidthInput.value : '');
+            data.append('min_depth', (enableDepthFilter && minDepthInput) ? minDepthInput.value : '');
+            data.append('max_depth', (enableDepthFilter && maxDepthInput) ? maxDepthInput.value : '');
+            data.append('min_area', (enableAreaFilter && minAreaInput) ? minAreaInput.value : '');
+            data.append('max_area', (enableAreaFilter && maxAreaInput) ? maxAreaInput.value : '');
             data.append('columns', wrapper.dataset.columns || '3');
             data.append('per_page', wrapper.dataset.perPage || '12');
             data.append('orderby', wrapper.dataset.orderby || 'menu_order');
             data.append('order', wrapper.dataset.order || 'ASC');
+            data.append('shortcode_categories', wrapper.dataset.categories || '');
             data.append('paged', page);
             
             // Collect checked attributes - send as individual form fields for WordPress
@@ -209,6 +220,26 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Trigger filter update
             AvadaProductFilter.filterProducts(wrapper, 1);
+        },
+        
+        handleDimensionToggle: function(e) {
+            const checkbox = e.target;
+            const row = checkbox.closest('.dimension-filter-row');
+            const inputs = row.querySelector('.dimension-inputs');
+            
+            if (checkbox.checked) {
+                inputs.style.display = 'block';
+            } else {
+                inputs.style.display = 'none';
+                // Clear inputs when disabled
+                const numberInputs = inputs.querySelectorAll('input[type="number"]');
+                numberInputs.forEach(input => input.value = '');
+                // Trigger filter update
+                const wrapper = checkbox.closest('.avada-product-filter-wrapper');
+                if (wrapper) {
+                    AvadaProductFilter.filterProducts(wrapper, 1);
+                }
+            }
         },
         
         // Utility function to debounce input events

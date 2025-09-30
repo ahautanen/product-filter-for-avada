@@ -44,6 +44,7 @@ class Avada_Product_Filter_Ajax_Handler {
         $orderby = isset($_POST['orderby']) ? sanitize_text_field($_POST['orderby']) : 'menu_order';
         $order = isset($_POST['order']) ? sanitize_text_field($_POST['order']) : 'ASC';
         $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+        $shortcode_categories = isset($_POST['shortcode_categories']) ? sanitize_text_field($_POST['shortcode_categories']) : '';
 
         // Use hardcoded WooCommerce attribute taxonomies for dimensions
         $width_taxonomy = 'pa_leveys-cm';
@@ -73,7 +74,17 @@ class Avada_Product_Filter_Ajax_Handler {
             'tax_query' => array()
         );
         
-        // Category filter
+        // Shortcode category restriction (if specified)
+        if (!empty($shortcode_categories)) {
+            $category_ids = array_map('intval', explode(',', $shortcode_categories));
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => $category_ids
+            );
+        }
+        
+        // Current category filter (from user selection)
         if (!empty($category)) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_cat',
@@ -207,6 +218,7 @@ class Avada_Product_Filter_Ajax_Handler {
         $max_depth = isset($_POST['max_depth']) ? floatval($_POST['max_depth']) : '';
         $min_area = isset($_POST['min_area']) ? floatval($_POST['min_area']) : '';
         $max_area = isset($_POST['max_area']) ? floatval($_POST['max_area']) : '';
+        $shortcode_categories = isset($_POST['shortcode_categories']) ? sanitize_text_field($_POST['shortcode_categories']) : '';
         // Use hardcoded WooCommerce attribute taxonomies for dimensions
         $width_taxonomy = 'pa_leveys-cm';
         $depth_taxonomy = 'pa_syvyys-cm';
@@ -234,6 +246,17 @@ class Avada_Product_Filter_Ajax_Handler {
         );
         
         // Apply same filters as main query
+        // Shortcode category restriction (if specified)
+        if (!empty($shortcode_categories)) {
+            $category_ids = array_map('intval', explode(',', $shortcode_categories));
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_cat',
+                'field' => 'term_id',
+                'terms' => $category_ids
+            );
+        }
+        
+        // Current category filter (from user selection)
         if (!empty($category)) {
             $args['tax_query'][] = array(
                 'taxonomy' => 'product_cat',
@@ -347,6 +370,11 @@ class Avada_Product_Filter_Ajax_Handler {
             // Convert term name to numeric value
             $numeric_value = floatval(str_replace(',', '.', $term->name));
             
+            // Skip non-numeric values (this excludes products without proper dimension values)
+            if ($numeric_value <= 0) {
+                continue;
+            }
+            
             // Check if the value falls within the specified range
             $in_range = true;
             
@@ -358,7 +386,7 @@ class Avada_Product_Filter_Ajax_Handler {
                 $in_range = false;
             }
             
-            if ($in_range && $numeric_value > 0) {
+            if ($in_range) {
                 $matching_slugs[] = $term->slug;
             }
         }

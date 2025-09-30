@@ -102,9 +102,34 @@
     font-size: 14px;
 }
 
-/* Dimension inputs reuse price styles */
-.filter-dimensions .price-range-inputs input[type="number"] {
-    width: 120px;
+/* Dimension filter styles */
+.filter-dimensions .dimension-filter-row {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.filter-dimensions .dimension-checkbox {
+    display: block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.filter-dimensions .dimension-checkbox input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.filter-dimensions .dimension-inputs {
+    margin-top: 10px;
+}
+
+.filter-dimensions .dimension-range {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.9em;
+    color: #666;
+    font-style: italic;
 }
 
 .price-range-inputs input[type="number"]:focus {
