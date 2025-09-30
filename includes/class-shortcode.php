@@ -61,9 +61,14 @@ class Avada_Product_Filter_Shortcode {
         $atts = shortcode_atts(array(
             'categories' => '',
             'attributes' => '',
-            'show_categories' => 'yes',
+            'show_categories' => 'no',
             'show_attributes' => 'yes',
             'show_price_filter' => 'yes',
+            'show_dimension_filter' => 'yes',
+            // Meta keys for dimensions (custom fields)
+            'width_meta_key' => 'width',
+            'depth_meta_key' => 'depth',
+            'area_meta_key' => 'area',
             'columns' => '3',
             'products_per_page' => '12',
             'orderby' => 'menu_order',
@@ -89,7 +94,7 @@ class Avada_Product_Filter_Shortcode {
         $min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : '';
         $max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : '';
         
-        echo '<div class="avada-product-filter-wrapper" data-columns="' . esc_attr($atts['columns']) . '" data-per-page="' . esc_attr($atts['products_per_page']) . '" data-orderby="' . esc_attr($atts['orderby']) . '" data-order="' . esc_attr($atts['order']) . '">';
+    echo '<div class="avada-product-filter-wrapper" data-columns="' . esc_attr($atts['columns']) . '" data-per-page="' . esc_attr($atts['products_per_page']) . '" data-orderby="' . esc_attr($atts['orderby']) . '" data-order="' . esc_attr($atts['order']) . '" data-show-dimensions="' . esc_attr($atts['show_dimension_filter']) . '" data-width-meta-key="' . esc_attr($atts['width_meta_key']) . '" data-depth-meta-key="' . esc_attr($atts['depth_meta_key']) . '" data-area-meta-key="' . esc_attr($atts['area_meta_key']) . '">';
         
         // Filter controls
         echo '<div class="avada-product-filter-controls">';
@@ -107,6 +112,18 @@ class Avada_Product_Filter_Shortcode {
         // Price filter
         if ($atts['show_price_filter'] === 'yes') {
             $this->render_price_filter($min_price, $max_price);
+        }
+
+        // Dimension filter
+        if (!empty($atts['show_dimension_filter']) && $atts['show_dimension_filter'] === 'yes') {
+            $width_range = $this->get_dimension_range($atts['width_meta_key']);
+            $depth_range = $this->get_dimension_range($atts['depth_meta_key']);
+            $area_range = $this->get_dimension_range($atts['area_meta_key']);
+
+            $min_vals = array('width' => $width_range['min'], 'depth' => $depth_range['min'], 'area' => $area_range['min']);
+            $max_vals = array('width' => $width_range['max'], 'depth' => $depth_range['max'], 'area' => $area_range['max']);
+
+            $this->render_dimension_filter($atts, $min_vals, $max_vals);
         }
         
         // Clear filters button
@@ -233,6 +250,56 @@ class Avada_Product_Filter_Shortcode {
         echo '<span class="price-max">' . wc_price($prices['max']) . '</span>';
         echo '</div>';
         echo '</div>';
+    }
+
+    /**
+     * Render dimension filter (width, depth, area)
+     */
+    private function render_dimension_filter($atts, $min_vals, $max_vals) {
+        echo '<div class="filter-group filter-dimensions">';
+        echo '<label>' . __('Dimensions', 'product-filter-for-avada') . '</label>';
+
+        echo '<div class="price-range-inputs">';
+        // Width
+        echo '<input type="number" name="min_width" placeholder="' . __('Min width', 'product-filter-for-avada') . '" value="' . esc_attr($min_vals['width']) . '" min="' . esc_attr($min_vals['width']) . '" max="' . esc_attr($max_vals['width']) . '" step="0.01">';
+        echo '<span class="price-separator">-</span>';
+        echo '<input type="number" name="max_width" placeholder="' . __('Max width', 'product-filter-for-avada') . '" value="' . esc_attr($max_vals['width']) . '" min="' . esc_attr($min_vals['width']) . '" max="' . esc_attr($max_vals['width']) . '" step="0.01">';
+        echo '</div>';
+
+        echo '<div class="price-range-inputs">';
+        // Depth
+        echo '<input type="number" name="min_depth" placeholder="' . __('Min depth', 'product-filter-for-avada') . '" value="' . esc_attr($min_vals['depth']) . '" min="' . esc_attr($min_vals['depth']) . '" max="' . esc_attr($max_vals['depth']) . '" step="0.01">';
+        echo '<span class="price-separator">-</span>';
+        echo '<input type="number" name="max_depth" placeholder="' . __('Max depth', 'product-filter-for-avada') . '" value="' . esc_attr($max_vals['depth']) . '" min="' . esc_attr($min_vals['depth']) . '" max="' . esc_attr($max_vals['depth']) . '" step="0.01">';
+        echo '</div>';
+
+        echo '<div class="price-range-inputs">';
+        // Area
+        echo '<input type="number" name="min_area" placeholder="' . __('Min area', 'product-filter-for-avada') . '" value="' . esc_attr($min_vals['area']) . '" min="' . esc_attr($min_vals['area']) . '" max="' . esc_attr($max_vals['area']) . '" step="0.01">';
+        echo '<span class="price-separator">-</span>';
+        echo '<input type="number" name="max_area" placeholder="' . __('Max area', 'product-filter-for-avada') . '" value="' . esc_attr($max_vals['area']) . '" min="' . esc_attr($min_vals['area']) . '" max="' . esc_attr($max_vals['area']) . '" step="0.01">';
+        echo '</div>';
+
+        echo '</div>';
+    }
+
+    /**
+     * Get min/max for a given meta key (dimension)
+     */
+    private function get_dimension_range($meta_key) {
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_val, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_val FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value != ''",
+            $meta_key
+        );
+
+        $results = $wpdb->get_row($sql);
+
+        return array(
+            'min' => $results->min_val ? floatval($results->min_val) : 0,
+            'max' => $results->max_val ? floatval($results->max_val) : 100
+        );
     }
     
     /**

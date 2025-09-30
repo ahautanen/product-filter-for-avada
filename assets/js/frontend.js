@@ -77,6 +77,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const categorySelect = wrapper.querySelector('select[name="filter_category"]');
             const minPriceInput = wrapper.querySelector('input[name="min_price"]');
             const maxPriceInput = wrapper.querySelector('input[name="max_price"]');
+            const minWidthInput = wrapper.querySelector('input[name="min_width"]');
+            const maxWidthInput = wrapper.querySelector('input[name="max_width"]');
+            const minDepthInput = wrapper.querySelector('input[name="min_depth"]');
+            const maxDepthInput = wrapper.querySelector('input[name="max_depth"]');
+            const minAreaInput = wrapper.querySelector('input[name="min_area"]');
+            const maxAreaInput = wrapper.querySelector('input[name="max_area"]');
             const checkedAttributes = wrapper.querySelectorAll('input[name="filter_attributes[]"]:checked');
             
             const data = new FormData();
@@ -85,11 +91,21 @@ document.addEventListener('DOMContentLoaded', function() {
             data.append('category', categorySelect ? categorySelect.value : '');
             data.append('min_price', minPriceInput ? minPriceInput.value : '');
             data.append('max_price', maxPriceInput ? maxPriceInput.value : '');
+            data.append('min_width', minWidthInput ? minWidthInput.value : '');
+            data.append('max_width', maxWidthInput ? maxWidthInput.value : '');
+            data.append('min_depth', minDepthInput ? minDepthInput.value : '');
+            data.append('max_depth', maxDepthInput ? maxDepthInput.value : '');
+            data.append('min_area', minAreaInput ? minAreaInput.value : '');
+            data.append('max_area', maxAreaInput ? maxAreaInput.value : '');
             data.append('columns', wrapper.dataset.columns || '3');
             data.append('per_page', wrapper.dataset.perPage || '12');
             data.append('orderby', wrapper.dataset.orderby || 'menu_order');
             data.append('order', wrapper.dataset.order || 'ASC');
             data.append('paged', page);
+                // Send meta key names so server can use dynamic keys
+                data.append('width_meta_key', wrapper.dataset.widthMetaKey || 'width');
+                data.append('depth_meta_key', wrapper.dataset.depthMetaKey || 'depth');
+                data.append('area_meta_key', wrapper.dataset.areaMetaKey || 'area');
             
             // Collect checked attributes - send as individual form fields for WordPress
             checkedAttributes.forEach(function(checkbox, index) {
@@ -174,10 +190,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const attributeCheckboxes = wrapper.querySelectorAll('input[name="filter_attributes[]"]');
             const minPriceInput = wrapper.querySelector('input[name="min_price"]');
             const maxPriceInput = wrapper.querySelector('input[name="max_price"]');
+            const minWidthInput = wrapper.querySelector('input[name="min_width"]');
+            const maxWidthInput = wrapper.querySelector('input[name="max_width"]');
+            const minDepthInput = wrapper.querySelector('input[name="min_depth"]');
+            const maxDepthInput = wrapper.querySelector('input[name="max_depth"]');
+            const minAreaInput = wrapper.querySelector('input[name="min_area"]');
+            const maxAreaInput = wrapper.querySelector('input[name="max_area"]');
             
             if (categorySelect) categorySelect.value = '';
             if (minPriceInput) minPriceInput.value = '';
             if (maxPriceInput) maxPriceInput.value = '';
+            if (minWidthInput) minWidthInput.value = '';
+            if (maxWidthInput) maxWidthInput.value = '';
+            if (minDepthInput) minDepthInput.value = '';
+            if (maxDepthInput) maxDepthInput.value = '';
+            if (minAreaInput) minAreaInput.value = '';
+            if (maxAreaInput) maxAreaInput.value = '';
             
             attributeCheckboxes.forEach(function(checkbox) {
                 checkbox.checked = false;

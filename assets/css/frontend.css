@@ -102,6 +102,11 @@
     font-size: 14px;
 }
 
+/* Dimension inputs reuse price styles */
+.filter-dimensions .price-range-inputs input[type="number"] {
+    width: 120px;
+}
+
 .price-range-inputs input[type="number"]:focus {
     outline: none;
     border-color: #65BCE7;
