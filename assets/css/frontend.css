@@ -176,26 +176,32 @@
     list-style: none;
 }
 
+.avada-product-filter-products ul.products.products-1,
 .avada-product-filter-products ul.products.fusion-columns-1 {
     grid-template-columns: 1fr;
 }
 
+.avada-product-filter-products ul.products.products-2,
 .avada-product-filter-products ul.products.fusion-columns-2 {
     grid-template-columns: repeat(2, 1fr);
 }
 
+.avada-product-filter-products ul.products.products-3,
 .avada-product-filter-products ul.products.fusion-columns-3 {
     grid-template-columns: repeat(3, 1fr);
 }
 
+.avada-product-filter-products ul.products.products-4,
 .avada-product-filter-products ul.products.fusion-columns-4 {
     grid-template-columns: repeat(4, 1fr);
 }
 
+.avada-product-filter-products ul.products.products-5,
 .avada-product-filter-products ul.products.fusion-columns-5 {
     grid-template-columns: repeat(5, 1fr);
 }
 
+.avada-product-filter-products ul.products.products-6,
 .avada-product-filter-products ul.products.fusion-columns-6 {
     grid-template-columns: repeat(6, 1fr);
 }
@@ -254,6 +260,9 @@
 
 /* Responsive grid adjustments */
 @media (max-width: 1024px) {
+    .avada-product-filter-products ul.products.products-4,
+    .avada-product-filter-products ul.products.products-5,
+    .avada-product-filter-products ul.products.products-6,
     .avada-product-filter-products ul.products.fusion-columns-4,
     .avada-product-filter-products ul.products.fusion-columns-5,
     .avada-product-filter-products ul.products.fusion-columns-6 {
@@ -262,6 +271,10 @@
 }
 
 @media (max-width: 768px) {
+    .avada-product-filter-products ul.products.products-3,
+    .avada-product-filter-products ul.products.products-4,
+    .avada-product-filter-products ul.products.products-5,
+    .avada-product-filter-products ul.products.products-6,
     .avada-product-filter-products ul.products.fusion-columns-3,
     .avada-product-filter-products ul.products.fusion-columns-4,
     .avada-product-filter-products ul.products.fusion-columns-5,

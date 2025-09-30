@@ -328,7 +328,7 @@ class Avada_Product_Filter_Shortcode {
         $products = new WP_Query($args);
         
         if ($products->have_posts()) {
-            echo '<ul class="products woocommerce columns-' . esc_attr($atts['columns']) . ' fusion-woo-product-grid fusion-columns-' . esc_attr($atts['columns']) . ' fusion-columns-total-' . esc_attr($atts['columns']) . '">';
+            echo '<ul class="products products-' . esc_attr($atts['columns']) . ' woocommerce columns-' . esc_attr($atts['columns']) . ' fusion-woo-product-grid fusion-columns-' . esc_attr($atts['columns']) . ' fusion-columns-total-' . esc_attr($atts['columns']) . '">';
             
             while ($products->have_posts()) {
                 $products->the_post();
