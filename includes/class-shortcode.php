@@ -1,6 +1,43 @@
 <?php
 /**
  * Shortcode functionality for Product Filter
+ * 
+ * EXAMPLE PRODUCT ELEMENT STRUCTURE:
+ * <li class="product type-product post-3713 status-publish first instock product_cat-helppa-mallisto product_cat-muut-tuotteet product_tag-helppa product_tag-helppa-elementti product_tag-kukkalaatikko product_tag-muut-tuotteet has-post-thumbnail taxable shipping-taxable purchasable product-type-simple product-grid-view">
+ *   <div class="fusion-product-wrapper">
+ *     <div class="fusion-clean-product-image-wrapper">
+ *       <div class="fusion-image-wrapper fusion-image-size-fixed">
+ *         <img src="..." class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail wp-post-image">
+ *         <div class="fusion-rollover">
+ *           <div class="fusion-product-buttons">
+ *             <a href="/?add-to-cart=3713" class="button product_type_simple add_to_cart_button ajax_add_to_cart">Lisää ostoskoriin</a>
+ *             <a href="/tuote/helppa-kukkalaatikko/" class="show_details_button">Lisätiedot</a>
+ *           </div>
+ *         </div>
+ *       </div>
+ *     </div>
+ *     <div class="fusion-product-content">
+ *       <div class="product-details">
+ *         <h3 class="product-title">
+ *           <a href="/tuote/helppa-kukkalaatikko/">Helppå Kukkalaatikko</a>
+ *         </h3>
+ *         <div class="fusion-price-rating">
+ *           <div class="custom-short-description">Product description...</div>
+ *           <span class="price">445,00 € sis. alv 25,5%</span>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </div>
+ *   <div class="custom-product-link">
+ *     <a href="/tuote/helppa-kukkalaatikko/" class="button">Tutustu tuotteeseen</a>
+ *   </div>
+ * </li>
+ * 
+ * Key classes for filtering:
+ * - product_cat-{category-slug} (categories)
+ * - product_tag-{tag-slug} (tags/attributes)  
+ * - Post ID: post-{id}
+ * - Product type: product-type-{type}
  */
 
 // Prevent direct access
@@ -291,14 +328,14 @@ class Avada_Product_Filter_Shortcode {
         $products = new WP_Query($args);
         
         if ($products->have_posts()) {
-            echo '<div class="products woocommerce columns-' . esc_attr($atts['columns']) . '">';
+            echo '<ul class="products woocommerce columns-' . esc_attr($atts['columns']) . ' fusion-woo-product-grid fusion-columns-' . esc_attr($atts['columns']) . ' fusion-columns-total-' . esc_attr($atts['columns']) . '">';
             
             while ($products->have_posts()) {
                 $products->the_post();
                 wc_get_template_part('content', 'product');
             }
             
-            echo '</div>';
+            echo '</ul>';
             
             // Pagination
             if ($products->max_num_pages > 1) {

@@ -1,44 +1,64 @@
 /**
- * Frontend JavaScript for Avada Product Filter
+ * Frontend JavaScript for Avada Product Filter (Vanilla JS)
  */
 
-jQuery(document).ready(function($) {
+document.addEventListener('DOMContentLoaded', function() {
     'use strict';
     
-    var AvadaProductFilter = {
+    const AvadaProductFilter = {
         
         init: function() {
             this.bindEvents();
         },
         
         bindEvents: function() {
-            // Filter change events
-            $(document).on('change', '.avada-product-filter-controls select', this.handleFilterChange);
-            $(document).on('change', '.avada-product-filter-controls input[type="checkbox"]', this.handleFilterChange);
-            $(document).on('input', '.avada-product-filter-controls input[type="number"]', this.debounce(this.handleFilterChange, 500));
+            // Filter change events with event delegation
+            document.addEventListener('change', function(e) {
+                if (e.target.matches('.avada-product-filter-controls select') ||
+                    e.target.matches('.avada-product-filter-controls input[type="checkbox"]')) {
+                    AvadaProductFilter.handleFilterChange(e);
+                }
+            });
+            
+            // Debounced input for number fields
+            document.addEventListener('input', AvadaProductFilter.debounce(function(e) {
+                if (e.target.matches('.avada-product-filter-controls input[type="number"]')) {
+                    AvadaProductFilter.handleFilterChange(e);
+                }
+            }, 500));
             
             // Clear filters
-            $(document).on('click', '.avada-filter-clear', this.clearFilters);
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('.avada-filter-clear')) {
+                    AvadaProductFilter.clearFilters(e);
+                }
+            });
             
             // Pagination clicks
-            $(document).on('click', '.avada-filter-pagination a', this.handlePagination);
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('.avada-filter-pagination a')) {
+                    AvadaProductFilter.handlePagination(e);
+                }
+            });
         },
         
         handleFilterChange: function(e) {
-            var $wrapper = $(this).closest('.avada-product-filter-wrapper');
-            AvadaProductFilter.filterProducts($wrapper, 1);
+            const wrapper = e.target.closest('.avada-product-filter-wrapper');
+            if (wrapper) {
+                AvadaProductFilter.filterProducts(wrapper, 1);
+            }
         },
         
         handlePagination: function(e) {
             e.preventDefault();
             
-            var $link = $(this);
-            var $wrapper = $link.closest('.avada-product-filter-wrapper');
-            var href = $link.attr('href');
-            var page = 1;
+            const link = e.target;
+            const wrapper = link.closest('.avada-product-filter-wrapper');
+            const href = link.getAttribute('href');
+            let page = 1;
             
             // Extract page number from URL
-            var matches = href.match(/\/page\/(\d+)/);
+            let matches = href.match(/\/page\/(\d+)/);
             if (matches) {
                 page = parseInt(matches[1]);
             } else {
@@ -48,76 +68,97 @@ jQuery(document).ready(function($) {
                 }
             }
             
-            AvadaProductFilter.filterProducts($wrapper, page);
+            AvadaProductFilter.filterProducts(wrapper, page);
         },
         
-        filterProducts: function($wrapper, page) {
+        filterProducts: function(wrapper, page) {
             page = page || 1;
             
-            var data = {
-                action: 'avada_filter_products',
-                nonce: avada_product_filter_ajax.nonce,
-                category: $wrapper.find('select[name="filter_category"]').val() || '',
-                attributes: [],
-                min_price: $wrapper.find('input[name="min_price"]').val() || '',
-                max_price: $wrapper.find('input[name="max_price"]').val() || '',
-                columns: $wrapper.data('columns') || 3,
-                per_page: $wrapper.data('per-page') || 12,
-                orderby: $wrapper.data('orderby') || 'menu_order',
-                order: $wrapper.data('order') || 'ASC',
-                paged: page
-            };
+            const categorySelect = wrapper.querySelector('select[name="filter_category"]');
+            const minPriceInput = wrapper.querySelector('input[name="min_price"]');
+            const maxPriceInput = wrapper.querySelector('input[name="max_price"]');
+            const checkedAttributes = wrapper.querySelectorAll('input[name="filter_attributes[]"]:checked');
             
-            // Collect checked attributes
-            $wrapper.find('input[name="filter_attributes[]"]:checked').each(function() {
-                data.attributes.push($(this).val());
+            const data = new FormData();
+            data.append('action', 'avada_filter_products');
+            data.append('nonce', avada_product_filter_ajax.nonce);
+            data.append('category', categorySelect ? categorySelect.value : '');
+            data.append('min_price', minPriceInput ? minPriceInput.value : '');
+            data.append('max_price', maxPriceInput ? maxPriceInput.value : '');
+            data.append('columns', wrapper.dataset.columns || '3');
+            data.append('per_page', wrapper.dataset.perPage || '12');
+            data.append('orderby', wrapper.dataset.orderby || 'menu_order');
+            data.append('order', wrapper.dataset.order || 'ASC');
+            data.append('paged', page);
+            
+            // Collect checked attributes - send as individual form fields for WordPress
+            checkedAttributes.forEach(function(checkbox, index) {
+                data.append(`attributes[${index}]`, checkbox.value);
             });
             
             // Show loading state
-            var $productsContainer = $wrapper.find('.avada-product-filter-products');
-            $productsContainer.addClass('loading');
+            const productsContainer = wrapper.querySelector('.avada-product-filter-products');
+            if (productsContainer) {
+                productsContainer.classList.add('loading');
+            }
             
-            // AJAX request
-            $.ajax({
-                url: avada_product_filter_ajax.ajax_url,
-                type: 'POST',
-                data: data,
-                success: function(response) {
-                    if (response.success) {
-                        $productsContainer.html(response.products);
-                        
-                        // Update pagination
-                        var $pagination = $wrapper.find('.avada-filter-pagination');
-                        if (response.pagination) {
-                            if ($pagination.length) {
-                                $pagination.html(response.pagination);
-                            } else {
-                                $productsContainer.after('<div class="avada-filter-pagination">' + response.pagination + '</div>');
-                            }
+            // Fetch request
+            fetch(avada_product_filter_ajax.ajax_url, {
+                method: 'POST',
+                body: data,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(response => {
+                if (response.success && productsContainer) {
+                    productsContainer.innerHTML = response.products;
+                    
+                    // Update pagination
+                    let pagination = wrapper.querySelector('.avada-filter-pagination');
+                    if (response.pagination) {
+                        if (pagination) {
+                            pagination.innerHTML = response.pagination;
                         } else {
-                            $pagination.remove();
+                            const paginationDiv = document.createElement('div');
+                            paginationDiv.className = 'avada-filter-pagination';
+                            paginationDiv.innerHTML = response.pagination;
+                            productsContainer.insertAdjacentElement('afterend', paginationDiv);
                         }
-                        
-                        // Scroll to products if not on first page
-                        if (page > 1) {
-                            $('html, body').animate({
-                                scrollTop: $wrapper.offset().top - 100
-                            }, 500);
-                        }
-                        
-                        // Trigger custom event for other scripts
-                        $(document).trigger('avada_products_filtered', {
-                            wrapper: $wrapper,
-                            found_posts: response.found_posts,
-                            page: page
+                    } else if (pagination) {
+                        pagination.remove();
+                    }
+                    
+                    // Scroll to products if not on first page
+                    if (page > 1) {
+                        const offsetTop = wrapper.getBoundingClientRect().top + window.pageYOffset - 100;
+                        window.scrollTo({
+                            top: offsetTop,
+                            behavior: 'smooth'
                         });
                     }
-                },
-                error: function() {
-                    console.error('Filter request failed');
-                },
-                complete: function() {
-                    $productsContainer.removeClass('loading');
+                    
+                    // Trigger custom event for other scripts
+                    const customEvent = new CustomEvent('avada_products_filtered', {
+                        detail: {
+                            wrapper: wrapper,
+                            found_posts: response.found_posts,
+                            page: page
+                        }
+                    });
+                    document.dispatchEvent(customEvent);
+                }
+            })
+            .catch(error => {
+                console.error('Filter request failed:', error);
+            })
+            .finally(() => {
+                if (productsContainer) {
+                    productsContainer.classList.remove('loading');
                 }
             });
         },
@@ -125,31 +166,39 @@ jQuery(document).ready(function($) {
         clearFilters: function(e) {
             e.preventDefault();
             
-            var $wrapper = $(this).closest('.avada-product-filter-wrapper');
+            const wrapper = e.target.closest('.avada-product-filter-wrapper');
+            if (!wrapper) return;
             
             // Reset all form elements
-            $wrapper.find('select[name="filter_category"]').val('');
-            $wrapper.find('input[name="filter_attributes[]"]').prop('checked', false);
-            $wrapper.find('input[name="min_price"]').val('');
-            $wrapper.find('input[name="max_price"]').val('');
+            const categorySelect = wrapper.querySelector('select[name="filter_category"]');
+            const attributeCheckboxes = wrapper.querySelectorAll('input[name="filter_attributes[]"]');
+            const minPriceInput = wrapper.querySelector('input[name="min_price"]');
+            const maxPriceInput = wrapper.querySelector('input[name="max_price"]');
+            
+            if (categorySelect) categorySelect.value = '';
+            if (minPriceInput) minPriceInput.value = '';
+            if (maxPriceInput) maxPriceInput.value = '';
+            
+            attributeCheckboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
             
             // Trigger filter update
-            AvadaProductFilter.filterProducts($wrapper, 1);
+            AvadaProductFilter.filterProducts(wrapper, 1);
         },
         
         // Utility function to debounce input events
         debounce: function(func, wait, immediate) {
-            var timeout;
-            return function() {
-                var context = this, args = arguments;
-                var later = function() {
-                    timeout = null;
-                    if (!immediate) func.apply(context, args);
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    if (!immediate) func.apply(this, args);
                 };
-                var callNow = immediate && !timeout;
+                const callNow = immediate && !timeout;
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
-                if (callNow) func.apply(context, args);
+                if (callNow) func.apply(this, args);
             };
         }
     };

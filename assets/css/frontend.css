@@ -165,6 +165,115 @@
     border-top: 4px solid #65BCE7;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+    z-index: 10;
+}
+
+/* Avada Product Grid Compatibility */
+.avada-product-filter-products ul.products {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.avada-product-filter-products ul.products.fusion-columns-1 {
+    grid-template-columns: 1fr;
+}
+
+.avada-product-filter-products ul.products.fusion-columns-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.avada-product-filter-products ul.products.fusion-columns-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.avada-product-filter-products ul.products.fusion-columns-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.avada-product-filter-products ul.products.fusion-columns-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.avada-product-filter-products ul.products.fusion-columns-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* Ensure Avada product items display correctly in grid */
+.avada-product-filter-products li.product {
+    margin-bottom: 20px;
+}
+
+/* Disable hover effects and rollover on product images */
+.avada-product-filter-products .fusion-rollover {
+    display: none !important;
+}
+
+.avada-product-filter-products .fusion-image-wrapper {
+    overflow: visible !important;
+}
+
+.avada-product-filter-products .fusion-image-wrapper:hover {
+    transform: none !important;
+}
+
+/* Make product image a simple link without effects */
+.avada-product-filter-products .fusion-clean-product-image-wrapper,
+.avada-product-filter-products .fusion-image-wrapper {
+    position: relative;
+}
+
+.avada-product-filter-products .fusion-image-wrapper img {
+    transition: none !important;
+    transform: none !important;
+}
+
+.avada-product-filter-products .fusion-image-wrapper:hover img {
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Ensure the entire image area is clickable as a simple link */
+.avada-product-filter-products .fusion-image-wrapper .fusion-link-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background: transparent;
+}
+
+/* Hide any overlay buttons or effects */
+.avada-product-filter-products .fusion-product-buttons,
+.avada-product-filter-products .fusion-rollover-content,
+.avada-product-filter-products .cart-loading {
+    display: none !important;
+}
+
+/* Responsive grid adjustments */
+@media (max-width: 1024px) {
+    .avada-product-filter-products ul.products.fusion-columns-4,
+    .avada-product-filter-products ul.products.fusion-columns-5,
+    .avada-product-filter-products ul.products.fusion-columns-6 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .avada-product-filter-products ul.products.fusion-columns-3,
+    .avada-product-filter-products ul.products.fusion-columns-4,
+    .avada-product-filter-products ul.products.fusion-columns-5,
+    .avada-product-filter-products ul.products.fusion-columns-6 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .avada-product-filter-products ul.products {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 @keyframes spin {

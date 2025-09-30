@@ -116,14 +116,14 @@ class Avada_Product_Filter_Ajax_Handler {
         
         if ($products->have_posts()) {
             ob_start();
-            echo '<div class="products woocommerce columns-' . esc_attr($columns) . '">';
+            echo '<ul class="products woocommerce columns-' . esc_attr($columns) . ' fusion-woo-product-grid fusion-columns-' . esc_attr($columns) . ' fusion-columns-total-' . esc_attr($columns) . '">';
             
             while ($products->have_posts()) {
                 $products->the_post();
                 wc_get_template_part('content', 'product');
             }
             
-            echo '</div>';
+            echo '</ul>';
             $response['products'] = ob_get_clean();
             
             // Generate pagination
