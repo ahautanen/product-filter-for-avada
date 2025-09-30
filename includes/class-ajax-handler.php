@@ -51,6 +51,9 @@ class Avada_Product_Filter_Ajax_Handler {
         $depth_taxonomy = 'pa_syvyys-cm';
         $area_taxonomy = 'pa_pinta-ala-m2';
 
+        // Debug log for received dimension values
+        error_log('Dimension filters received: width=' . $min_width . '-' . $max_width . ', depth=' . $min_depth . '-' . $max_depth . ', area=' . $min_area . '-' . $max_area);
+        
         // Sanity: ensure min <= max for dimensions (swap if needed)
         if ($min_width !== '' && $max_width !== '' && $min_width > $max_width) {
             $tmp = $min_width; $min_width = $max_width; $max_width = $tmp;
@@ -305,6 +308,7 @@ class Avada_Product_Filter_Ajax_Handler {
         // Width filter (WC attribute taxonomy)
         if (!empty($min_width) || !empty($max_width)) {
             $width_terms = $this->get_attribute_terms_in_range($width_taxonomy, $min_width, $max_width);
+            error_log('Width filter: min=' . $min_width . ', max=' . $max_width . ', matching terms: ' . implode(',', $width_terms));
             if (!empty($width_terms)) {
                 $args['tax_query'][] = array(
                     'taxonomy' => $width_taxonomy,

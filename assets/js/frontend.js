@@ -101,12 +101,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const enableDepthFilter = wrapper.querySelector('input[name="enable_depth_filter"]:checked');
             const enableAreaFilter = wrapper.querySelector('input[name="enable_area_filter"]:checked');
             
-            data.append('min_width', (enableWidthFilter && minWidthInput) ? minWidthInput.value : '');
-            data.append('max_width', (enableWidthFilter && maxWidthInput) ? maxWidthInput.value : '');
-            data.append('min_depth', (enableDepthFilter && minDepthInput) ? minDepthInput.value : '');
-            data.append('max_depth', (enableDepthFilter && maxDepthInput) ? maxDepthInput.value : '');
-            data.append('min_area', (enableAreaFilter && minAreaInput) ? minAreaInput.value : '');
-            data.append('max_area', (enableAreaFilter && maxAreaInput) ? maxAreaInput.value : '');
+            const widthMin = (enableWidthFilter && minWidthInput) ? minWidthInput.value : '';
+            const widthMax = (enableWidthFilter && maxWidthInput) ? maxWidthInput.value : '';
+            const depthMin = (enableDepthFilter && minDepthInput) ? minDepthInput.value : '';
+            const depthMax = (enableDepthFilter && maxDepthInput) ? maxDepthInput.value : '';
+            const areaMin = (enableAreaFilter && minAreaInput) ? minAreaInput.value : '';
+            const areaMax = (enableAreaFilter && maxAreaInput) ? maxAreaInput.value : '';
+            
+            data.append('min_width', widthMin);
+            data.append('max_width', widthMax);
+            data.append('min_depth', depthMin);
+            data.append('max_depth', depthMax);
+            data.append('min_area', areaMin);
+            data.append('max_area', areaMax);
+            
+            // Debug log for dimension filters
+            if (enableWidthFilter || enableDepthFilter || enableAreaFilter) {
+                console.log('Dimension filters active:', {
+                    width: enableWidthFilter ? {min: widthMin, max: widthMax} : 'disabled',
+                    depth: enableDepthFilter ? {min: depthMin, max: depthMax} : 'disabled',
+                    area: enableAreaFilter ? {min: areaMin, max: areaMax} : 'disabled'
+                });
+            }
             data.append('columns', wrapper.dataset.columns || '3');
             data.append('per_page', wrapper.dataset.perPage || '12');
             data.append('orderby', wrapper.dataset.orderby || 'menu_order');
@@ -204,6 +220,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const minAreaInput = wrapper.querySelector('input[name="min_area"]');
             const maxAreaInput = wrapper.querySelector('input[name="max_area"]');
             
+            // Dimension checkboxes
+            const enableWidthCheckbox = wrapper.querySelector('input[name="enable_width_filter"]');
+            const enableDepthCheckbox = wrapper.querySelector('input[name="enable_depth_filter"]');
+            const enableAreaCheckbox = wrapper.querySelector('input[name="enable_area_filter"]');
+            
             if (categorySelect) categorySelect.value = '';
             if (minPriceInput) minPriceInput.value = '';
             if (maxPriceInput) maxPriceInput.value = '';
@@ -213,6 +234,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if (maxDepthInput) maxDepthInput.value = '';
             if (minAreaInput) minAreaInput.value = '';
             if (maxAreaInput) maxAreaInput.value = '';
+            
+            // Uncheck dimension checkboxes and hide inputs
+            if (enableWidthCheckbox) {
+                enableWidthCheckbox.checked = false;
+                const widthInputs = enableWidthCheckbox.closest('.dimension-filter-row').querySelector('.dimension-inputs');
+                if (widthInputs) widthInputs.style.display = 'none';
+            }
+            if (enableDepthCheckbox) {
+                enableDepthCheckbox.checked = false;
+                const depthInputs = enableDepthCheckbox.closest('.dimension-filter-row').querySelector('.dimension-inputs');
+                if (depthInputs) depthInputs.style.display = 'none';
+            }
+            if (enableAreaCheckbox) {
+                enableAreaCheckbox.checked = false;
+                const areaInputs = enableAreaCheckbox.closest('.dimension-filter-row').querySelector('.dimension-inputs');
+                if (areaInputs) areaInputs.style.display = 'none';
+            }
             
             attributeCheckboxes.forEach(function(checkbox) {
                 checkbox.checked = false;
@@ -234,11 +272,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Clear inputs when disabled
                 const numberInputs = inputs.querySelectorAll('input[type="number"]');
                 numberInputs.forEach(input => input.value = '');
-                // Trigger filter update
-                const wrapper = checkbox.closest('.avada-product-filter-wrapper');
-                if (wrapper) {
-                    AvadaProductFilter.filterProducts(wrapper, 1);
-                }
+            }
+            // Always trigger filter update when checkbox state changes
+            const wrapper = checkbox.closest('.avada-product-filter-wrapper');
+            if (wrapper) {
+                AvadaProductFilter.filterProducts(wrapper, 1);
             }
         },
         
