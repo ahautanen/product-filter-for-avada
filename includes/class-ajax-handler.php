@@ -45,15 +45,10 @@ class Avada_Product_Filter_Ajax_Handler {
         $order = isset($_POST['order']) ? sanitize_text_field($_POST['order']) : 'ASC';
         $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
 
-        // Raw meta key inputs (from shortcode data-attributes)
-        $raw_width_meta = isset($_POST['width_meta_key']) ? $_POST['width_meta_key'] : 'width';
-        $raw_depth_meta = isset($_POST['depth_meta_key']) ? $_POST['depth_meta_key'] : 'depth';
-        $raw_area_meta = isset($_POST['area_meta_key']) ? $_POST['area_meta_key'] : 'area';
-
-        // Validate meta key names (allow letters, numbers, underscore, hyphen)
-        $width_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_width_meta) ? sanitize_text_field($raw_width_meta) : 'width';
-        $depth_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_depth_meta) ? sanitize_text_field($raw_depth_meta) : 'depth';
-        $area_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_area_meta) ? sanitize_text_field($raw_area_meta) : 'area';
+        // Use hardcoded WooCommerce attribute taxonomies for dimensions
+        $width_taxonomy = 'pa_leveys-cm';
+        $depth_taxonomy = 'pa_syvyys-cm';
+        $area_taxonomy = 'pa_pinta-ala-m2';
 
         // Sanity: ensure min <= max for dimensions (swap if needed)
         if ($min_width !== '' && $max_width !== '' && $min_width > $max_width) {
@@ -127,63 +122,6 @@ class Avada_Product_Filter_Ajax_Handler {
             $args['meta_query'][] = $price_query;
         }
 
-    // Width filter
-        if (!empty($min_width) || !empty($max_width)) {
-            $width_query = array('key' => $width_meta_key);
-            if (!empty($min_width) && !empty($max_width)) {
-                $width_query['value'] = array($min_width, $max_width);
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_width)) {
-                $width_query['value'] = $min_width;
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = '>=';
-            } elseif (!empty($max_width)) {
-                $width_query['value'] = $max_width;
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = '<=';
-            }
-            $args['meta_query'][] = $width_query;
-        }
-
-        // Depth filter
-        if (!empty($min_depth) || !empty($max_depth)) {
-            $depth_query = array('key' => $depth_meta_key);
-            if (!empty($min_depth) && !empty($max_depth)) {
-                $depth_query['value'] = array($min_depth, $max_depth);
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_depth)) {
-                $depth_query['value'] = $min_depth;
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = '>=';
-            } elseif (!empty($max_depth)) {
-                $depth_query['value'] = $max_depth;
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = '<=';
-            }
-            $args['meta_query'][] = $depth_query;
-        }
-
-        // Area filter
-        if (!empty($min_area) || !empty($max_area)) {
-            $area_query = array('key' => $area_meta_key);
-            if (!empty($min_area) && !empty($max_area)) {
-                $area_query['value'] = array($min_area, $max_area);
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_area)) {
-                $area_query['value'] = $min_area;
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = '>=';
-            } elseif (!empty($max_area)) {
-                $area_query['value'] = $max_area;
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = '<=';
-            }
-            $args['meta_query'][] = $area_query;
-        }
-        
         // Set tax_query relation
         if (count($args['tax_query']) > 1) {
             $args['tax_query']['relation'] = 'AND';
@@ -269,15 +207,10 @@ class Avada_Product_Filter_Ajax_Handler {
         $max_depth = isset($_POST['max_depth']) ? floatval($_POST['max_depth']) : '';
         $min_area = isset($_POST['min_area']) ? floatval($_POST['min_area']) : '';
         $max_area = isset($_POST['max_area']) ? floatval($_POST['max_area']) : '';
-        // Raw meta key inputs
-        $raw_width_meta = isset($_POST['width_meta_key']) ? $_POST['width_meta_key'] : 'width';
-        $raw_depth_meta = isset($_POST['depth_meta_key']) ? $_POST['depth_meta_key'] : 'depth';
-        $raw_area_meta = isset($_POST['area_meta_key']) ? $_POST['area_meta_key'] : 'area';
-
-        // Validate meta key names (allow letters, numbers, underscore, hyphen)
-        $width_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_width_meta) ? sanitize_text_field($raw_width_meta) : 'width';
-        $depth_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_depth_meta) ? sanitize_text_field($raw_depth_meta) : 'depth';
-        $area_meta_key = preg_match('/^[A-Za-z0-9_\-]+$/', $raw_area_meta) ? sanitize_text_field($raw_area_meta) : 'area';
+        // Use hardcoded WooCommerce attribute taxonomies for dimensions
+        $width_taxonomy = 'pa_leveys-cm';
+        $depth_taxonomy = 'pa_syvyys-cm';
+        $area_taxonomy = 'pa_pinta-ala-m2';
 
         // Sanity: ensure min <= max for dimensions
         if ($min_width !== '' && $max_width !== '' && $min_width > $max_width) {
@@ -346,61 +279,40 @@ class Avada_Product_Filter_Ajax_Handler {
             $args['meta_query'][] = $price_query;
         }
 
-        // Width filter
+        // Width filter (WC attribute taxonomy)
         if (!empty($min_width) || !empty($max_width)) {
-            $width_query = array('key' => $width_meta_key);
-            if (!empty($min_width) && !empty($max_width)) {
-                $width_query['value'] = array($min_width, $max_width);
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_width)) {
-                $width_query['value'] = $min_width;
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = '>=';
-            } elseif (!empty($max_width)) {
-                $width_query['value'] = $max_width;
-                $width_query['type'] = 'DECIMAL';
-                $width_query['compare'] = '<=';
+            $width_terms = $this->get_attribute_terms_in_range($width_taxonomy, $min_width, $max_width);
+            if (!empty($width_terms)) {
+                $args['tax_query'][] = array(
+                    'taxonomy' => $width_taxonomy,
+                    'field' => 'slug',
+                    'terms' => $width_terms
+                );
             }
-            $args['meta_query'][] = $width_query;
         }
 
-        // Depth filter
+        // Depth filter (WC attribute taxonomy)
         if (!empty($min_depth) || !empty($max_depth)) {
-            $depth_query = array('key' => $depth_meta_key);
-            if (!empty($min_depth) && !empty($max_depth)) {
-                $depth_query['value'] = array($min_depth, $max_depth);
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_depth)) {
-                $depth_query['value'] = $min_depth;
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = '>=';
-            } elseif (!empty($max_depth)) {
-                $depth_query['value'] = $max_depth;
-                $depth_query['type'] = 'DECIMAL';
-                $depth_query['compare'] = '<=';
+            $depth_terms = $this->get_attribute_terms_in_range($depth_taxonomy, $min_depth, $max_depth);
+            if (!empty($depth_terms)) {
+                $args['tax_query'][] = array(
+                    'taxonomy' => $depth_taxonomy,
+                    'field' => 'slug',
+                    'terms' => $depth_terms
+                );
             }
-            $args['meta_query'][] = $depth_query;
         }
 
-        // Area filter
+        // Area filter (WC attribute taxonomy)
         if (!empty($min_area) || !empty($max_area)) {
-            $area_query = array('key' => $area_meta_key);
-            if (!empty($min_area) && !empty($max_area)) {
-                $area_query['value'] = array($min_area, $max_area);
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = 'BETWEEN';
-            } elseif (!empty($min_area)) {
-                $area_query['value'] = $min_area;
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = '>=';
-            } elseif (!empty($max_area)) {
-                $area_query['value'] = $max_area;
-                $area_query['type'] = 'DECIMAL';
-                $area_query['compare'] = '<=';
+            $area_terms = $this->get_attribute_terms_in_range($area_taxonomy, $min_area, $max_area);
+            if (!empty($area_terms)) {
+                $args['tax_query'][] = array(
+                    'taxonomy' => $area_taxonomy,
+                    'field' => 'slug',
+                    'terms' => $area_terms
+                );
             }
-            $args['meta_query'][] = $area_query;
         }
         
         if (count($args['tax_query']) > 1) {
@@ -413,5 +325,44 @@ class Avada_Product_Filter_Ajax_Handler {
             'success' => true,
             'count' => $products->found_posts
         ));
+    }
+    
+    /**
+     * Get attribute terms (slugs) that fall within the specified numeric range
+     */
+    private function get_attribute_terms_in_range($taxonomy, $min_val, $max_val) {
+        // Get all terms from the attribute taxonomy
+        $terms = get_terms(array(
+            'taxonomy' => $taxonomy,
+            'hide_empty' => true
+        ));
+        
+        if (empty($terms) || is_wp_error($terms)) {
+            return array();
+        }
+        
+        $matching_slugs = array();
+        
+        foreach ($terms as $term) {
+            // Convert term name to numeric value
+            $numeric_value = floatval(str_replace(',', '.', $term->name));
+            
+            // Check if the value falls within the specified range
+            $in_range = true;
+            
+            if (!empty($min_val) && $numeric_value < $min_val) {
+                $in_range = false;
+            }
+            
+            if (!empty($max_val) && $numeric_value > $max_val) {
+                $in_range = false;
+            }
+            
+            if ($in_range && $numeric_value > 0) {
+                $matching_slugs[] = $term->slug;
+            }
+        }
+        
+        return $matching_slugs;
     }
 }

@@ -65,10 +65,6 @@ class Avada_Product_Filter_Shortcode {
             'show_attributes' => 'yes',
             'show_price_filter' => 'yes',
             'show_dimension_filter' => 'yes',
-            // Meta keys for dimensions (custom fields)
-            'width_meta_key' => 'width',
-            'depth_meta_key' => 'depth',
-            'area_meta_key' => 'area',
             'columns' => '3',
             'products_per_page' => '12',
             'orderby' => 'menu_order',
@@ -94,7 +90,7 @@ class Avada_Product_Filter_Shortcode {
         $min_price = isset($_GET['min_price']) ? floatval($_GET['min_price']) : '';
         $max_price = isset($_GET['max_price']) ? floatval($_GET['max_price']) : '';
         
-    echo '<div class="avada-product-filter-wrapper" data-columns="' . esc_attr($atts['columns']) . '" data-per-page="' . esc_attr($atts['products_per_page']) . '" data-orderby="' . esc_attr($atts['orderby']) . '" data-order="' . esc_attr($atts['order']) . '" data-show-dimensions="' . esc_attr($atts['show_dimension_filter']) . '" data-width-meta-key="' . esc_attr($atts['width_meta_key']) . '" data-depth-meta-key="' . esc_attr($atts['depth_meta_key']) . '" data-area-meta-key="' . esc_attr($atts['area_meta_key']) . '">';
+    echo '<div class="avada-product-filter-wrapper" data-columns="' . esc_attr($atts['columns']) . '" data-per-page="' . esc_attr($atts['products_per_page']) . '" data-orderby="' . esc_attr($atts['orderby']) . '" data-order="' . esc_attr($atts['order']) . '" data-show-dimensions="' . esc_attr($atts['show_dimension_filter']) . '">';
         
         // Filter controls
         echo '<div class="avada-product-filter-controls">';
@@ -116,9 +112,10 @@ class Avada_Product_Filter_Shortcode {
 
         // Dimension filter
         if (!empty($atts['show_dimension_filter']) && $atts['show_dimension_filter'] === 'yes') {
-            $width_range = $this->get_dimension_range($atts['width_meta_key']);
-            $depth_range = $this->get_dimension_range($atts['depth_meta_key']);
-            $area_range = $this->get_dimension_range($atts['area_meta_key']);
+            // Use hardcoded WooCommerce attribute taxonomies
+            $width_range = $this->get_attribute_range('pa_leveys-cm');
+            $depth_range = $this->get_attribute_range('pa_syvyys-cm');
+            $area_range = $this->get_attribute_range('pa_pinta-ala-m2');
 
             $min_vals = array('width' => $width_range['min'], 'depth' => $depth_range['min'], 'area' => $area_range['min']);
             $max_vals = array('width' => $width_range['max'], 'depth' => $depth_range['max'], 'area' => $area_range['max']);
@@ -284,21 +281,37 @@ class Avada_Product_Filter_Shortcode {
     }
 
     /**
-     * Get min/max for a given meta key (dimension)
+     * Get min/max for a WooCommerce attribute taxonomy (dimension)
      */
-    private function get_dimension_range($meta_key) {
-        global $wpdb;
-
-        $sql = $wpdb->prepare(
-            "SELECT MIN(CAST(meta_value AS DECIMAL(10,2))) as min_val, MAX(CAST(meta_value AS DECIMAL(10,2))) as max_val FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value != ''",
-            $meta_key
-        );
-
-        $results = $wpdb->get_row($sql);
-
+    private function get_attribute_range($taxonomy) {
+        // Get all terms from the attribute taxonomy
+        $terms = get_terms(array(
+            'taxonomy' => $taxonomy,
+            'hide_empty' => true,
+            'fields' => 'names'
+        ));
+        
+        if (empty($terms) || is_wp_error($terms)) {
+            return array('min' => 0, 'max' => 100);
+        }
+        
+        // Convert term names to numeric values and find min/max
+        $numeric_values = array();
+        foreach ($terms as $term_name) {
+            // Convert to float, handle both comma and dot decimals
+            $numeric_value = floatval(str_replace(',', '.', $term_name));
+            if ($numeric_value > 0) {
+                $numeric_values[] = $numeric_value;
+            }
+        }
+        
+        if (empty($numeric_values)) {
+            return array('min' => 0, 'max' => 100);
+        }
+        
         return array(
-            'min' => $results->min_val ? floatval($results->min_val) : 0,
-            'max' => $results->max_val ? floatval($results->max_val) : 100
+            'min' => min($numeric_values),
+            'max' => max($numeric_values)
         );
     }
     

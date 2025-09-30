@@ -102,10 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
             data.append('orderby', wrapper.dataset.orderby || 'menu_order');
             data.append('order', wrapper.dataset.order || 'ASC');
             data.append('paged', page);
-                // Send meta key names so server can use dynamic keys
-                data.append('width_meta_key', wrapper.dataset.widthMetaKey || 'width');
-                data.append('depth_meta_key', wrapper.dataset.depthMetaKey || 'depth');
-                data.append('area_meta_key', wrapper.dataset.areaMetaKey || 'area');
             
             // Collect checked attributes - send as individual form fields for WordPress
             checkedAttributes.forEach(function(checkbox, index) {

@@ -106,23 +106,22 @@ The plugin includes CSS that's compatible with Avada theme styling. You can furt
 
 - Minimum and maximum numeric inputs for product dimensions (width, depth, area).
 - Dimension filters are enabled by shortcode attribute `show_dimension_filter` (yes/no). Default: yes.
-- The plugin reads product dimensions from custom fields (post meta). You can specify which meta keys to use with the shortcode attributes:
-	- `width_meta_key` (default: `width`)
-	- `depth_meta_key` (default: `depth`)
-	- `area_meta_key` (default: `area`)
+- The plugin uses hardcoded WooCommerce attribute taxonomies:
+  - **Width**: `pa_leveys-cm` (values in centimeters)
+  - **Depth**: `pa_syvyys-cm` (values in centimeters) 
+  - **Area**: `pa_pinta-ala-m2` (values in square meters)
 
-Validation and notes:
-- Meta key names are validated server-side: only letters, numbers, underscore (_), and hyphen (-) are allowed. If an invalid meta key is supplied the plugin falls back to the default meta key.
-- Dimension values are compared numerically (DECIMAL). Ensure your meta values are stored as plain numbers (for example: `12.5`, not `12,5 cm`).
+Technical notes:
+- Attribute values must be numeric (e.g., `34`, `34.5`, `45.6`). Both integers and decimals are supported.
+- The plugin converts attribute term names to numeric values for filtering.
 - If a user accidentally sets min > max, the plugin will swap the values server-side to avoid empty results.
+- Products must have the corresponding WooCommerce attributes assigned with numeric values.
 
-Example shortcode enabling dimension filters and custom meta keys:
+Example shortcode enabling dimension filters:
 
 ```
-[avada_product_filter show_dimension_filter="yes" width_meta_key="product_width" depth_meta_key="product_depth" area_meta_key="product_area"]
-```
-
-## Developer Information
+[avada_product_filter show_dimension_filter="yes" columns="4" products_per_page="16"]
+```## Developer Information
 
 ### Hooks and Filters
 
